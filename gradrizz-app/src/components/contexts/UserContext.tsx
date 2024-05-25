@@ -1,6 +1,8 @@
 // components/contexts/UserContext.tsx
-import { createContext, ReactNode, useContext, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useReducer, useEffect } from 'react';
 import { User } from 'firebase/auth';
+import { useAuth } from '~/lib/firebase'; // Import the useAuth hook
+import { onAuthStateChanged } from 'firebase/auth';
 
 type AuthActions = { type: 'SIGN_IN', payload: { user: User } } | { type: 'SIGN_OUT' };
 
@@ -41,6 +43,19 @@ export const AuthContext = createContext<AuthContextProps>({
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(AuthReducer, { state: 'UNKNOWN' });
+  const auth = useAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch({ type: 'SIGN_IN', payload: { user } });
+      } else {
+        dispatch({ type: 'SIGN_OUT' });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>

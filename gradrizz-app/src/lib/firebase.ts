@@ -22,7 +22,7 @@ export const setupFirebase = () => {
   }
 };
 
-let auth: Auth;
+export let auth: Auth;
 let firestore: ReturnType<typeof getFirestore>;
 let storage: ReturnType<typeof getStorage>;
 
