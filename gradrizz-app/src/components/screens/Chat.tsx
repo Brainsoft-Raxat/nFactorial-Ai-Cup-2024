@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthState } from '~/components/contexts/UserContext';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Head } from '~/components/shared/Head';
@@ -36,18 +36,18 @@ const Chat = () => {
   const handleSendMessage = async () => {
     if (input.trim() === '') return;
 
-    const userMessage = { sender: 'user', text: input };
+    const userMessage: Message = { sender: 'user', text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
     setIsTyping(true);
 
     let currentChatId = chatId;
-    if (!currentChatId) {
+    if (!currentChatId && state.state === 'SIGNED_IN') {
       try {
         // Generate a chat title based on the initial message
         const title = await createChatTitle(input);
         // Create a new chat with the generated title
-        currentChatId = await createChat(state.currentUser!.uid, title);
+        currentChatId = await createChat(state.currentUser.uid, title);
         navigate(`/chat/${currentChatId}`);
       } catch (error) {
         console.error('Error creating chat:', error);
@@ -64,7 +64,7 @@ const Chat = () => {
 
       let done = false;
       let botMessage = '';
-      const newMessages = [...messages, { sender: 'user', text: input }];
+      const newMessages: Message[] = [...messages, { sender: 'user', text: input }];
 
       while (!done) {
         const { value, done: doneReading } = await reader.read();
@@ -91,12 +91,12 @@ const Chat = () => {
     }
   }, [messages]);
 
-  const renderers = useMemo(() => ({
-    h1: ({ children }: { children: React.ReactNode }) => <h1 className="text-2xl font-bold">{children}</h1>,
-    h2: ({ children }: { children: React.ReactNode }) => <h2 className="text-xl font-semibold">{children}</h2>,
-    h3: ({ children }: { children: React.ReactNode }) => <h3 className="text-lg font-medium">{children}</h3>,
-    p: ({ children }: { children: React.ReactNode }) => <p className="mb-2">{children}</p>,
-    li: ({ children }: { children: React.ReactNode }) => <li className="list-disc list-inside">{children}</li>,
+  const renderers: Components = useMemo(() => ({
+    h1: ({ children }) => <h1 className="text-2xl font-bold">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-xl font-semibold">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-lg font-medium">{children}</h3>,
+    p: ({ children }) => <p className="mb-2">{children}</p>,
+    li: ({ children }) => <li className="list-disc list-inside">{children}</li>,
   }), []);
 
   return (

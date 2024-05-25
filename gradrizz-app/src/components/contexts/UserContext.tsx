@@ -49,12 +49,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const useAuthState = () => {
-  const { state } = useContext(AuthContext);
-  return {
-    state,
-  };
-};
+const useAuthState = () => useContext(AuthContext);
 
 const useSignIn = () => {
   const { dispatch } = useContext(AuthContext);
