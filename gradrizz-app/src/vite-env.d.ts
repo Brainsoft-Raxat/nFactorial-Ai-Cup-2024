@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   MODE: string;
   VITE_SERVICE_NAME: string
+  VITE_BASE_API_URL: string;
   VITE_FIREBASE_APIKEY: string;
   VITE_FIREBASE_AUTHDOMAIN: string;
   VITE_FIREBASE_DATABASEURL: string;
