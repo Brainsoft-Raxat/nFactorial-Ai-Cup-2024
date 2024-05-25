@@ -53,7 +53,7 @@ const InnerRouter = () => {
       children: [
         {
           index: true,
-          element: <RedirectToFirstChat />,
+          element: state.state === 'SIGNED_IN' ? <RedirectToFirstChat /> : <LoginScreen />,
         },
         {
           path: 'chat',
