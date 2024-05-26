@@ -75,5 +75,5 @@ variable with the value set in my local environment
 We also expose port 8080 with the `-p 8080:8080` option.
 
 ```shell
-docker run -e OPENAI_API_KEY=$OPENAI_API_KEY -p 8080:8080 my-langserve-app
+docker run -e OPENAI_API_KEY=$OPENAI_API_KEY -e OPENAI_MODEL=gpt-3.5-turbo -p 8080:8080 my-langserve-app
 ```
